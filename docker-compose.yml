@@ -1,0 +1,30 @@
+services:
+
+  db:
+    image: mysql:8
+    container_name: flight_db
+    environment:
+      MYSQL_ROOT_PASSWORD: Hello
+      MYSQL_DATABASE: flightdb
+    ports:
+      - "3306:3306"
+
+  backend:
+    build: ./flightservice
+    container_name: flight_backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/flightdb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+
+  frontend:
+    build: ./frontend
+    container_name: flight_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
